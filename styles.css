@@ -501,7 +501,15 @@ body {
     flex-shrink: 0;
 }
 
-.btn-reset {
+.footer-links {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.footer-link {
     display: flex;
     align-items: center;
     gap: 0.4rem;
@@ -512,19 +520,45 @@ body {
     color: var(--color-text-muted);
     font-size: 0.75rem;
     font-weight: 500;
+    text-decoration: none;
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
-.btn-reset:hover {
+.footer-link:hover {
     background: rgba(255, 143, 163, 0.15);
     border-color: rgba(255, 143, 163, 0.25);
     color: var(--color-text);
 }
 
-.btn-reset svg {
+.footer-link svg {
     width: 14px;
     height: 14px;
+}
+
+.btn-reset {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.75rem;
+    background: transparent;
+    border: none;
+    color: var(--color-text-muted);
+    font-size: 0.7rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    opacity: 0.7;
+}
+
+.btn-reset:hover {
+    color: var(--color-text);
+    opacity: 1;
+}
+
+.btn-reset svg {
+    width: 12px;
+    height: 12px;
 }
 
 /* Toast */

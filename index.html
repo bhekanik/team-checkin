@@ -3,11 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Check-in Generator - Build Trust & Relationships</title>
+    
+    <!-- Primary Meta Tags -->
+    <title>Team Check-in Generator | 130+ Questions for Remote Teams</title>
+    <meta name="title" content="Team Check-in Generator | 130+ Questions for Remote Teams">
+    <meta name="description" content="Free check-in question generator for remote teams. 130+ icebreakers, culture questions, and team building prompts to build trust and relationships. Perfect for standups and meetings.">
+    <meta name="keywords" content="check-in questions, remote team, icebreaker questions, team building, standup questions, meeting icebreakers, culture questions, team engagement">
+    <meta name="author" content="Bhekani Khumalo">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="English">
+    <meta name="revisit-after" content="7 days">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://team-checkin.surge.sh/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://team-checkin.surge.sh/">
+    <meta property="og:title" content="Team Check-in Generator | 130+ Questions for Remote Teams">
+    <meta property="og:description" content="Free check-in question generator for remote teams. 130+ icebreakers, culture questions, and team building prompts to build trust and relationships.">
+    <meta property="og:image" content="https://team-checkin.surge.sh/og-image.png">
+    <meta property="og:site_name" content="Team Check-in Generator">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://team-checkin.surge.sh/">
+    <meta property="twitter:title" content="Team Check-in Generator | 130+ Questions for Remote Teams">
+    <meta property="twitter:description" content="Free check-in question generator for remote teams. 130+ icebreakers, culture questions, and team building prompts to build trust and relationships.">
+    <meta property="twitter:image" content="https://team-checkin.surge.sh/og-image.png">
+    <meta property="twitter:creator" content="@bhekanik">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff8fa3' stroke-width='2'><path d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/></svg>">
+    
+    <!-- Preconnect -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
     <link rel="stylesheet" href="styles.css">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Team Check-in Generator",
+        "description": "Free check-in question generator for remote teams with 130+ icebreakers, culture questions, and team building prompts.",
+        "url": "https://team-checkin.surge.sh/",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Any",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "author": {
+            "@type": "Person",
+            "name": "Bhekani Khumalo",
+            "url": "https://bhekani.com"
+        },
+        "creator": {
+            "@type": "Person",
+            "name": "Bhekani Khumalo",
+            "url": "https://bhekani.com"
+        }
+    }
+    </script>
 </head>
 <body>
     <div class="background">
@@ -18,13 +83,13 @@
 
     <main class="container">
         <header class="header">
-            <div class="logo">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <a href="/" class="logo" aria-label="Team Check-in Generator - Home">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                     <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
                 </svg>
                 <span>Check-in Generator</span>
-            </div>
-            <div class="progress-indicator" id="progressIndicator">
+            </a>
+            <div class="progress-indicator" id="progressIndicator" aria-live="polite">
                 <span class="progress-count" id="progressCount">0 done</span>
             </div>
         </header>
@@ -35,49 +100,49 @@
                 <span class="line accent">Build relationships.</span>
             </h1>
             <p class="subtitle">
-                Check-ins create better meetings. It's backed by science, and anyone can do it.
+                130+ check-in questions for remote teams. Icebreakers, culture questions, and team building prompts for better meetings.
             </p>
         </section>
 
-        <section class="question-card">
+        <section class="question-card" aria-label="Question card">
             <div class="card-inner" id="cardInner">
-                <div class="card-status" id="cardStatus"></div>
+                <div class="card-status" id="cardStatus" aria-hidden="true"></div>
                 <div class="category-badge" id="categoryBadge">Icebreaker</div>
                 <h2 class="question" id="questionText">What's one thing you're looking forward to this week?</h2>
                 <div class="card-actions">
-                    <button class="btn-copy" id="copyBtn" title="Copy to clipboard">
+                    <button class="btn-copy" id="copyBtn" title="Copy to clipboard" aria-label="Copy question to clipboard">
                         <span class="btn-content">
-                            <svg class="icon-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg class="icon-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
                                 <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
                             </svg>
-                            <svg class="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <svg class="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
                                 <path d="M20 6L9 17l-5-5"/>
                             </svg>
                             <span class="btn-text">Copy</span>
                         </span>
-                        <span class="btn-ripple"></span>
+                        <span class="btn-ripple" aria-hidden="true"></span>
                     </button>
-                    <button class="btn-done" id="doneBtn" title="Mark as done">
+                    <button class="btn-done" id="doneBtn" title="Mark as done" aria-label="Mark question as done">
                         <span class="btn-content">
-                            <svg class="icon-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg class="icon-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                                 <circle cx="12" cy="12" r="10"/>
                             </svg>
-                            <svg class="icon-check-filled" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                            <svg class="icon-check-filled" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true">
                                 <circle cx="12" cy="12" r="10"/>
                                 <path d="M9 12l2 2 4-4" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                             <span class="btn-text">Done</span>
                         </span>
-                        <span class="btn-ripple"></span>
+                        <span class="btn-ripple" aria-hidden="true"></span>
                     </button>
                 </div>
             </div>
         </section>
 
-        <section class="controls">
+        <section class="controls" aria-label="Navigation controls">
             <button class="nav-btn prev" id="prevBtn" aria-label="Previous question">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
                     <path d="M19 12H5M12 19l-7-7 7-7"/>
                 </svg>
             </button>
@@ -87,13 +152,13 @@
             </div>
             
             <button class="nav-btn next" id="nextBtn" aria-label="Next question">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
                     <path d="M5 12h14M12 5l7 7-7 7"/>
                 </svg>
             </button>
         </section>
 
-        <section class="categories">
+        <nav class="categories" aria-label="Question categories">
             <button class="category-pill active" data-category="all">All</button>
             <button class="category-pill" data-category="culture">🌍 Culture & Background</button>
             <button class="category-pill" data-category="icebreaker">Icebreaker</button>
@@ -102,12 +167,25 @@
             <button class="category-pill" data-category="work">Work</button>
             <button class="category-pill" data-category="fun">Fun</button>
             <button class="category-pill" data-category="reflection">Reflection</button>
-        </section>
+        </nav>
 
         <footer class="footer">
-            <p>Made for remote teams who want to connect better 💙</p>
-            <button class="btn-reset" id="resetBtn" title="Reset all progress">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <div class="footer-links">
+                <a href="https://bhekani.com" target="_blank" rel="noopener noreferrer" class="footer-link" aria-label="Visit Bhekani Khumalo's personal website">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                    </svg>
+                    Made by Bhekani
+                </a>
+                <a href="https://github.com/bhekanik/team-checkin" target="_blank" rel="noopener noreferrer" class="footer-link" aria-label="View source code on GitHub">
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    GitHub
+                </a>
+            </div>
+            <button class="btn-reset" id="resetBtn" title="Reset all progress" aria-label="Reset all done question progress">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                     <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
                     <path d="M3 3v5h5"/>
                 </svg>
@@ -116,7 +194,7 @@
         </footer>
     </main>
 
-    <div class="toast" id="toast"></div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
     <script src="script.js"></script>
 </body>
