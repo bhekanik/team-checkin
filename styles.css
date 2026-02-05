@@ -318,6 +318,19 @@ body {
     transform: translateY(0) scale(0.98);
 }
 
+/* Improve touch targets on mobile */
+@media (hover: none) and (pointer: coarse) {
+    .btn-copy:hover, .btn-done:hover,
+    .nav-btn:hover, .category-pill:hover {
+        transform: none;
+    }
+    
+    .btn-copy:active, .btn-done:active,
+    .nav-btn:active, .category-pill:active {
+        transform: scale(0.96);
+    }
+}
+
 /* Copy button specific */
 .btn-copy svg {
     width: 18px;
@@ -627,48 +640,169 @@ body {
     html, body {
         overflow: auto;
         height: auto;
+        min-height: 100vh;
     }
     
     .container {
-        padding: 1.5rem;
+        padding: 1rem;
         height: auto;
         max-height: none;
         overflow: visible;
+        justify-content: flex-start;
+        padding-top: 1.5rem;
+        padding-bottom: 1.5rem;
+    }
+    
+    .header {
+        padding: 0 0 0.5rem;
+    }
+    
+    .logo {
+        font-size: 1.1rem;
+    }
+    
+    .logo svg {
+        width: 24px;
+        height: 24px;
+    }
+    
+    .hero {
+        margin-bottom: 1rem;
+    }
+    
+    .title {
+        font-size: clamp(1.5rem, 8vw, 2rem);
+        margin-bottom: 0.5rem;
+    }
+    
+    .subtitle {
+        font-size: 0.9rem;
+        padding: 0 0.5rem;
+    }
+    
+    .question-card {
+        margin-bottom: 1rem;
+        width: 100%;
     }
     
     .card-inner {
-        padding: 2rem 1.5rem;
+        padding: 1.5rem 1.25rem;
+        border-radius: 20px;
+    }
+    
+    .category-badge {
+        font-size: 0.65rem;
+        padding: 0.3rem 0.75rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .question {
+        font-size: 1.15rem;
+        min-height: 60px;
+        margin-bottom: 1.25rem;
+        line-height: 1.4;
+    }
+    
+    .card-actions {
+        gap: 0.5rem;
+    }
+    
+    .btn-copy, .btn-done {
+        padding: 0.625rem 1.25rem;
+        font-size: 0.875rem;
+        min-height: 44px;
+        min-width: 90px;
     }
     
     .controls {
-        gap: 1rem;
+        gap: 0.75rem;
+        margin-bottom: 0.75rem;
     }
     
     .nav-btn {
-        width: 50px;
-        height: 50px;
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        min-height: 44px;
     }
     
     .instructions {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-    
-    .instructions span:not(.key) {
-        display: none;
+        font-size: 0.8rem;
+        text-align: center;
     }
     
     .categories {
-        gap: 0.5rem;
+        gap: 0.4rem;
+        margin-bottom: 0.75rem;
     }
     
     .category-pill {
-        padding: 0.5rem 1rem;
-        font-size: 0.8rem;
+        padding: 0.5rem 0.875rem;
+        font-size: 0.75rem;
+        min-height: 36px;
+    }
+    
+    .footer {
+        gap: 0.75rem;
+    }
+    
+    .footer-links {
+        gap: 0.5rem;
+    }
+    
+    .footer-link {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.75rem;
+    }
+    
+    .progress-actions {
+        gap: 0.5rem;
+    }
+    
+    .progress-indicator {
+        font-size: 0.7rem;
+        padding: 0.35rem 0.75rem;
+    }
+    
+    .btn-reset {
+        font-size: 0.7rem;
+        padding: 0.35rem 0.5rem;
+    }
+    
+    .toast {
+        font-size: 0.875rem;
+        padding: 0.875rem 1.5rem;
+        bottom: 1rem;
     }
     
     .header, .hero, .question-card, .controls {
         flex-shrink: 1;
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 380px) {
+    .container {
+        padding: 0.75rem;
+    }
+    
+    .card-inner {
+        padding: 1.25rem 1rem;
+    }
+    
+    .question {
+        font-size: 1rem;
+    }
+    
+    .btn-copy, .btn-done {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+        min-width: 80px;
+    }
+    
+    .category-pill {
+        padding: 0.4rem 0.75rem;
+        font-size: 0.7rem;
     }
 }
 
