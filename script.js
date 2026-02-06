@@ -171,21 +171,17 @@ const surpriseBtn = document.getElementById('surpriseBtn');
 const categoryPills = document.querySelectorAll('.category-pill');
 const toast = document.getElementById('toast');
 
-// Carousel state
-let isAnimating = false;
-const carouselTrack = document.getElementById('carouselTrack');
-const prevCard = document.getElementById('prevCard');
-const currentCard = document.getElementById('currentCard');
-const nextCard = document.getElementById('nextCard');
-
 // Initialize
 function init() {
     // Check URL for shared question
     loadFromURL();
     
-    // Pre-render adjacent cards
-    updateCarouselCards();
+    // Shuffle questions for initial random order
+    if (!window.location.search.includes('q=')) {
+        shuffleQuestions();
+    }
     
+    updateQuestion();
     setupEventListeners();
     updateProgressIndicator();
     
@@ -244,9 +240,6 @@ function loadFromURL() {
                 });
             }
         }
-    } else {
-        // Shuffle if no URL param
-        shuffleQuestions();
     }
 }
 
@@ -271,7 +264,7 @@ function surpriseMe() {
         pill.classList.toggle('active', pill.dataset.category === 'all');
     });
     
-    updateQuestion('next');
+    updateQuestion();
     showToast('Surprise! 🎉');
 }
 
@@ -360,13 +353,6 @@ function toggleDone() {
     updateDoneButtonState();
     updateCardDoneState();
     updateProgressIndicator();
-    
-    // Show feedback
-    if (!isDone) {
-        showToast('Marked as done!');
-    } else {
-        showToast('Removed from done');
-    }
 }
 
 // Toggle favorite state for current question
@@ -385,13 +371,7 @@ function toggleFavorite() {
     
     saveFavoriteQuestions();
     updateFavoriteButtonState();
-    
-    // Show feedback
-    if (!isFavorited) {
-        showToast('Added to favorites! ⭐');
-    } else {
-        showToast('Removed from favorites');
-    }
+    updateProgressIndicator();
 }
 
 // Update done button visual state
@@ -422,11 +402,10 @@ function updateFavoriteButtonState() {
 // Update card visual state
 function updateCardDoneState() {
     const isDone = isCurrentQuestionDone();
-    const currentInner = currentCard.querySelector('.card-inner');
     if (isDone) {
-        currentInner.classList.add('is-done');
+        cardInner.classList.add('is-done');
     } else {
-        currentInner.classList.remove('is-done');
+        cardInner.classList.remove('is-done');
     }
 }
 
@@ -502,112 +481,36 @@ function totalDone() {
     return Object.keys(doneQuestions).length;
 }
 
-// Update carousel card contents
-function updateCarouselCards() {
+// Update the displayed question
+function updateQuestion() {
     if (filteredQuestions.length === 0) return;
     
-    const prevIndex = (currentIndex - 1 + filteredQuestions.length) % filteredQuestions.length;
-    const nextIndex = (currentIndex + 1) % filteredQuestions.length;
+    const question = filteredQuestions[currentIndex];
     
-    // Update prev card
-    const prevQuestion = filteredQuestions[prevIndex];
-    updateCardContent(prevCard, prevQuestion);
+    // Update content
+    questionText.textContent = question.text;
+    categoryBadge.textContent = question.category;
+    categoryBadge.className = `category-badge ${question.category}`;
     
-    // Update current card
-    const currentQuestion = filteredQuestions[currentIndex];
-    updateCardContent(currentCard, currentQuestion, true);
-    
-    // Update next card
-    const nextQuestion = filteredQuestions[nextIndex];
-    updateCardContent(nextCard, nextQuestion);
+    // Update done state
+    updateDoneButtonState();
+    updateCardDoneState();
+    updateFavoriteButtonState();
     
     // Update URL for sharing
     updateURL();
 }
 
-// Update individual card content
-function updateCardContent(cardElement, question, isCurrent = false) {
-    const badge = cardElement.querySelector('.category-badge');
-    const questionText = cardElement.querySelector('.question');
-    const cardInner = cardElement.querySelector('.card-inner');
-    
-    badge.textContent = question.category;
-    badge.className = `category-badge ${question.category}`;
-    questionText.textContent = question.text;
-    
-    // Update done/favorite status visual for current card
-    if (isCurrent) {
-        const id = getQuestionId(question);
-        const isDone = doneQuestions[id];
-        const isFavorited = favoriteQuestions[id];
-        
-        if (isDone) {
-            cardInner.classList.add('is-done');
-        } else {
-            cardInner.classList.remove('is-done');
-        }
-        
-        // Update button states
-        updateDoneButtonState();
-        updateFavoriteButtonState();
-    }
-}
-
-// Legacy updateQuestion function (for initial load and filter changes)
-function updateQuestion(direction = null) {
-    updateCarouselCards();
-}
-
-// Navigate to next question with carousel animation
+// Navigate to next question
 function nextQuestion() {
-    if (isAnimating) return;
-    isAnimating = true;
-    
-    // Slide left (current moves left, next comes in from right)
-    carouselTrack.style.transform = 'translateX(-100%)';
-    
-    setTimeout(() => {
-        currentIndex = (currentIndex + 1) % filteredQuestions.length;
-        
-        // Reset position without animation
-        carouselTrack.style.transition = 'none';
-        carouselTrack.style.transform = 'translateX(0)';
-        
-        // Update all card contents
-        updateCarouselCards();
-        
-        // Restore animation
-        setTimeout(() => {
-            carouselTrack.style.transition = 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
-            isAnimating = false;
-        }, 50);
-    }, 400);
+    currentIndex = (currentIndex + 1) % filteredQuestions.length;
+    updateQuestion();
 }
 
-// Navigate to previous question with carousel animation
+// Navigate to previous question
 function prevQuestion() {
-    if (isAnimating) return;
-    isAnimating = true;
-    
-    // Slide right (current moves right, prev comes in from left)
-    carouselTrack.style.transform = 'translateX(100%)';
-    
-    setTimeout(() => {
-        currentIndex = (currentIndex - 1 + filteredQuestions.length) % filteredQuestions.length;
-        
-        // Reset position without animation
-        carouselTrack.style.transition = 'none';
-        carouselTrack.style.transform = 'translateX(0)';
-        
-        // Update all card contents
-        updateCarouselCards();
-        
-        // Restore animation
-        setTimeout(() => {
-            carouselTrack.style.transition = 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
-            isAnimating = false;
-        }, 50);
-    }, 400);
+    currentIndex = (currentIndex - 1 + filteredQuestions.length) % filteredQuestions.length;
+    updateQuestion();
 }
 
 // Copy question to clipboard
@@ -650,8 +553,6 @@ function showCopyFeedback() {
     copyBtn.classList.add('copied');
     copyBtnText.textContent = 'Copied!';
     
-    showToast('Copied to clipboard!');
-    
     // Reset after 2 seconds
     copyBtn.resetTimeout = setTimeout(() => {
         copyBtn.classList.remove('copied');
@@ -660,7 +561,7 @@ function showCopyFeedback() {
 }
 
 // Show toast notification
-function showToast(message = 'Copied to clipboard!') {
+function showToast(message) {
     toast.textContent = message;
     toast.classList.add('show');
     
@@ -836,11 +737,11 @@ function setupEventListeners() {
     let touchStartX = 0;
     let touchEndX = 0;
     
-    currentCard.addEventListener('touchstart', (e) => {
+    cardInner.addEventListener('touchstart', (e) => {
         touchStartX = e.changedTouches[0].screenX;
     }, { passive: true });
     
-    currentCard.addEventListener('touchend', (e) => {
+    cardInner.addEventListener('touchend', (e) => {
         touchEndX = e.changedTouches[0].screenX;
         handleSwipe();
     }, { passive: true });
