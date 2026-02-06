@@ -171,12 +171,21 @@ const surpriseBtn = document.getElementById('surpriseBtn');
 const categoryPills = document.querySelectorAll('.category-pill');
 const toast = document.getElementById('toast');
 
+// Carousel state
+let isAnimating = false;
+const carouselTrack = document.getElementById('carouselTrack');
+const prevCard = document.getElementById('prevCard');
+const currentCard = document.getElementById('currentCard');
+const nextCard = document.getElementById('nextCard');
+
 // Initialize
 function init() {
     // Check URL for shared question
     loadFromURL();
     
-    updateQuestion();
+    // Pre-render adjacent cards
+    updateCarouselCards();
+    
     setupEventListeners();
     updateProgressIndicator();
     
@@ -413,10 +422,11 @@ function updateFavoriteButtonState() {
 // Update card visual state
 function updateCardDoneState() {
     const isDone = isCurrentQuestionDone();
+    const currentInner = currentCard.querySelector('.card-inner');
     if (isDone) {
-        cardInner.classList.add('is-done');
+        currentInner.classList.add('is-done');
     } else {
-        cardInner.classList.remove('is-done');
+        currentInner.classList.remove('is-done');
     }
 }
 
@@ -492,44 +502,112 @@ function totalDone() {
     return Object.keys(doneQuestions).length;
 }
 
-// Update the displayed question
-function updateQuestion(direction = null) {
+// Update carousel card contents
+function updateCarouselCards() {
     if (filteredQuestions.length === 0) return;
     
-    const question = filteredQuestions[currentIndex];
+    const prevIndex = (currentIndex - 1 + filteredQuestions.length) % filteredQuestions.length;
+    const nextIndex = (currentIndex + 1) % filteredQuestions.length;
     
-    // Add animation class
-    if (direction) {
-        cardInner.classList.add(direction === 'next' ? 'animating-right' : 'animating-left');
-        setTimeout(() => {
-            cardInner.classList.remove('animating-right', 'animating-left');
-        }, 400);
-    }
+    // Update prev card
+    const prevQuestion = filteredQuestions[prevIndex];
+    updateCardContent(prevCard, prevQuestion);
     
-    // Update content
-    questionText.textContent = question.text;
-    categoryBadge.textContent = question.category;
-    categoryBadge.className = `category-badge ${question.category}`;
+    // Update current card
+    const currentQuestion = filteredQuestions[currentIndex];
+    updateCardContent(currentCard, currentQuestion, true);
     
-    // Update done state
-    updateDoneButtonState();
-    updateCardDoneState();
-    updateFavoriteButtonState();
+    // Update next card
+    const nextQuestion = filteredQuestions[nextIndex];
+    updateCardContent(nextCard, nextQuestion);
     
     // Update URL for sharing
     updateURL();
 }
 
-// Navigate to next question
-function nextQuestion() {
-    currentIndex = (currentIndex + 1) % filteredQuestions.length;
-    updateQuestion('next');
+// Update individual card content
+function updateCardContent(cardElement, question, isCurrent = false) {
+    const badge = cardElement.querySelector('.category-badge');
+    const questionText = cardElement.querySelector('.question');
+    const cardInner = cardElement.querySelector('.card-inner');
+    
+    badge.textContent = question.category;
+    badge.className = `category-badge ${question.category}`;
+    questionText.textContent = question.text;
+    
+    // Update done/favorite status visual for current card
+    if (isCurrent) {
+        const id = getQuestionId(question);
+        const isDone = doneQuestions[id];
+        const isFavorited = favoriteQuestions[id];
+        
+        if (isDone) {
+            cardInner.classList.add('is-done');
+        } else {
+            cardInner.classList.remove('is-done');
+        }
+        
+        // Update button states
+        updateDoneButtonState();
+        updateFavoriteButtonState();
+    }
 }
 
-// Navigate to previous question
+// Legacy updateQuestion function (for initial load and filter changes)
+function updateQuestion(direction = null) {
+    updateCarouselCards();
+}
+
+// Navigate to next question with carousel animation
+function nextQuestion() {
+    if (isAnimating) return;
+    isAnimating = true;
+    
+    // Slide left (current moves left, next comes in from right)
+    carouselTrack.style.transform = 'translateX(-33.333%)';
+    
+    setTimeout(() => {
+        currentIndex = (currentIndex + 1) % filteredQuestions.length;
+        
+        // Reset position without animation
+        carouselTrack.style.transition = 'none';
+        carouselTrack.style.transform = 'translateX(0)';
+        
+        // Update all card contents
+        updateCarouselCards();
+        
+        // Restore animation
+        setTimeout(() => {
+            carouselTrack.style.transition = 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+            isAnimating = false;
+        }, 50);
+    }, 400);
+}
+
+// Navigate to previous question with carousel animation
 function prevQuestion() {
-    currentIndex = (currentIndex - 1 + filteredQuestions.length) % filteredQuestions.length;
-    updateQuestion('prev');
+    if (isAnimating) return;
+    isAnimating = true;
+    
+    // Slide right (current moves right, prev comes in from left)
+    carouselTrack.style.transform = 'translateX(33.333%)';
+    
+    setTimeout(() => {
+        currentIndex = (currentIndex - 1 + filteredQuestions.length) % filteredQuestions.length;
+        
+        // Reset position without animation
+        carouselTrack.style.transition = 'none';
+        carouselTrack.style.transform = 'translateX(0)';
+        
+        // Update all card contents
+        updateCarouselCards();
+        
+        // Restore animation
+        setTimeout(() => {
+            carouselTrack.style.transition = 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+            isAnimating = false;
+        }, 50);
+    }, 400);
 }
 
 // Copy question to clipboard
@@ -758,11 +836,11 @@ function setupEventListeners() {
     let touchStartX = 0;
     let touchEndX = 0;
     
-    cardInner.addEventListener('touchstart', (e) => {
+    currentCard.addEventListener('touchstart', (e) => {
         touchStartX = e.changedTouches[0].screenX;
     }, { passive: true });
     
-    cardInner.addEventListener('touchend', (e) => {
+    currentCard.addEventListener('touchend', (e) => {
         touchEndX = e.changedTouches[0].screenX;
         handleSwipe();
     }, { passive: true });
