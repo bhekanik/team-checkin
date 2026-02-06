@@ -143,9 +143,9 @@ body {
 }
 
 .title {
-    font-size: clamp(2rem, 5vw, 3rem);
-    font-weight: 800;
-    line-height: 1.1;
+    font-size: clamp(1.25rem, 3vw, 1.75rem);
+    font-weight: 700;
+    line-height: 1.2;
     margin-bottom: 0.5rem;
 }
 
@@ -247,11 +247,11 @@ body {
 .category-badge.reflection { background: rgba(212, 181, 240, 0.2); border-color: rgba(212, 181, 240, 0.35); color: #8b74a3; }
 
 .question {
-    font-size: clamp(1.25rem, 3vw, 1.75rem);
-    font-weight: 700;
-    line-height: 1.3;
+    font-size: clamp(1.75rem, 5vw, 2.75rem);
+    font-weight: 800;
+    line-height: 1.25;
     margin-bottom: 1.5rem;
-    min-height: 80px;
+    min-height: 100px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -691,7 +691,7 @@ body {
     }
     
     .title {
-        font-size: clamp(1.5rem, 8vw, 2rem);
+        font-size: clamp(1.1rem, 5vw, 1.5rem);
         margin-bottom: 0.5rem;
     }
     
@@ -717,10 +717,10 @@ body {
     }
     
     .question {
-        font-size: 1.15rem;
-        min-height: 60px;
+        font-size: clamp(1.4rem, 6vw, 2rem);
+        min-height: 80px;
         margin-bottom: 1.25rem;
-        line-height: 1.4;
+        line-height: 1.3;
     }
     
     .card-actions {
