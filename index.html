@@ -36,6 +36,9 @@
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff8fa3' stroke-width='2'><path d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/></svg>">
     
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
     <!-- Preconnect -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -94,6 +97,10 @@
             <p class="subtitle">
                 130+ check-in questions for remote teams
             </p>
+            <button class="btn-surprise" id="surpriseBtn" title="Surprise me with a random question!">
+                <span>🎲</span>
+                <span>Surprise Me</span>
+            </button>
         </section>
     </header>
 
@@ -112,7 +119,7 @@
                     <div class="category-badge" id="categoryBadge">Icebreaker</div>
                     <h2 class="question" id="questionText">What's one thing you're looking forward to this week?</h2>
                     <div class="card-actions">
-                        <button class="btn-copy" id="copyBtn" title="Copy to clipboard" aria-label="Copy question to clipboard">
+                        <button class="btn-copy" id="copyBtn" title="Copy to clipboard (C)" aria-label="Copy question to clipboard">
                             <span class="btn-content">
                                 <svg class="icon-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                                     <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
@@ -125,7 +132,19 @@
                             </span>
                             <span class="btn-ripple" aria-hidden="true"></span>
                         </button>
-                        <button class="btn-done" id="doneBtn" title="Mark as done" aria-label="Mark question as done">
+                        <button class="btn-favorite" id="favoriteBtn" title="Add to favorites (F)" aria-label="Add question to favorites">
+                            <span class="btn-content">
+                                <svg class="icon-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                </svg>
+                                <svg class="icon-star-filled" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true">
+                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                </svg>
+                                <span class="btn-text">Favorite</span>
+                            </span>
+                            <span class="btn-ripple" aria-hidden="true"></span>
+                        </button>
+                        <button class="btn-done" id="doneBtn" title="Mark as done (D)" aria-label="Mark question as done">
                             <span class="btn-content">
                                 <svg class="icon-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                                     <circle cx="12" cy="12" r="10"/>
@@ -164,6 +183,14 @@
         </nav>
 
         <div class="bottom-actions">
+            <button class="btn-export" id="exportBtn" title="Export done questions" aria-label="Export done questions as markdown">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                Export
+            </button>
             <div class="progress-indicator" id="progressIndicator" aria-live="polite">
                 <span class="progress-count" id="progressCount">0 done</span>
             </div>

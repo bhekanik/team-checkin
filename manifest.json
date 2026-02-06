@@ -1,0 +1,22 @@
+{
+    "name": "Team Check-in Generator",
+    "short_name": "Check-in",
+    "description": "130+ check-in questions for remote teams to build trust and relationships",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#1a1a2e",
+    "theme_color": "#ff8fa3",
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect fill='%231a1a2e' width='192' height='192' rx='24'/%3E%3Cpath d='M96 32L32 64l64 32 64-32-64-32zM32 136l64 32 64-32M32 100l64 32 64-32' fill='none' stroke='%23ff8fa3' stroke-width='12' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E",
+            "sizes": "192x192",
+            "type": "image/svg+xml"
+        },
+        {
+            "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect fill='%231a1a2e' width='512' height='512' rx='64'/%3E%3Cpath d='M256 85L85 171l171 86 171-86-171-86zM85 341l171 86 171-86M85 256l171 86 171-86' fill='none' stroke='%23ff8fa3' stroke-width='32' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E",
+            "sizes": "512x512",
+            "type": "image/svg+xml"
+        }
+    ]
+}

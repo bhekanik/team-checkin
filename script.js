@@ -150,6 +150,7 @@ let currentIndex = 0;
 let currentCategory = 'all';
 let filteredQuestions = [...questions];
 let doneQuestions = loadDoneQuestions();
+let favoriteQuestions = loadFavoriteQuestions();
 
 // DOM Elements
 const questionText = document.getElementById('questionText');
@@ -157,24 +158,87 @@ const categoryBadge = document.getElementById('categoryBadge');
 const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
 const copyBtn = document.getElementById('copyBtn');
-const copyIcon = copyBtn.querySelector('.icon-copy');
-const checkIcon = copyBtn.querySelector('.icon-check');
 const copyBtnText = copyBtn.querySelector('.btn-text');
 const doneBtn = document.getElementById('doneBtn');
 const doneBtnText = doneBtn.querySelector('.btn-text');
+const favoriteBtn = document.getElementById('favoriteBtn');
+const favoriteBtnText = favoriteBtn?.querySelector('.btn-text');
 const cardInner = document.getElementById('cardInner');
 const progressCount = document.getElementById('progressCount');
 const resetBtn = document.getElementById('resetBtn');
+const exportBtn = document.getElementById('exportBtn');
+const surpriseBtn = document.getElementById('surpriseBtn');
 const categoryPills = document.querySelectorAll('.category-pill');
 const toast = document.getElementById('toast');
 
 // Initialize
 function init() {
-    // Shuffle questions for initial random order
-    shuffleQuestions();
+    // Check URL for shared question
+    loadFromURL();
+    
     updateQuestion();
     setupEventListeners();
     updateProgressIndicator();
+    
+    // Register service worker for PWA
+    registerServiceWorker();
+}
+
+// Get unique ID for a question
+function getQuestionId(question) {
+    return `${question.category}-${question.text.substring(0, 30)}`;
+}
+
+// URL-based sharing - update URL when navigating
+function updateURL() {
+    if (filteredQuestions.length === 0) return;
+    const question = filteredQuestions[currentIndex];
+    const id = getQuestionId(question);
+    const url = new URL(window.location.href);
+    url.searchParams.set('q', id);
+    url.searchParams.set('cat', currentCategory);
+    window.history.replaceState({}, '', url);
+}
+
+// Load from URL on init
+function loadFromURL() {
+    const url = new URL(window.location.href);
+    const questionId = url.searchParams.get('q');
+    const category = url.searchParams.get('cat');
+    
+    if (category) {
+        currentCategory = category;
+        // Update active pill
+        categoryPills.forEach(pill => {
+            pill.classList.toggle('active', pill.dataset.category === category);
+        });
+    }
+    
+    filteredQuestions = getFilteredQuestions();
+    
+    if (questionId) {
+        // Find question by ID
+        const index = filteredQuestions.findIndex(q => getQuestionId(q) === questionId);
+        if (index !== -1) {
+            currentIndex = index;
+        } else {
+            // Question not found in current filter, try all questions
+            const allIndex = questions.findIndex(q => getQuestionId(q) === questionId);
+            if (allIndex !== -1) {
+                // Switch to that question's category
+                currentCategory = questions[allIndex].category;
+                filteredQuestions = getFilteredQuestions();
+                currentIndex = filteredQuestions.findIndex(q => getQuestionId(q) === questionId);
+                // Update active pill
+                categoryPills.forEach(pill => {
+                    pill.classList.toggle('active', pill.dataset.category === currentCategory);
+                });
+            }
+        }
+    } else {
+        // Shuffle if no URL param
+        shuffleQuestions();
+    }
 }
 
 // Shuffle array using Fisher-Yates algorithm
@@ -187,17 +251,27 @@ function shuffleQuestions() {
     currentIndex = 0;
 }
 
+// Surprise Me - random question from any category
+function surpriseMe() {
+    currentCategory = 'all';
+    filteredQuestions = [...questions];
+    currentIndex = Math.floor(Math.random() * filteredQuestions.length);
+    
+    // Update active pill
+    categoryPills.forEach(pill => {
+        pill.classList.toggle('active', pill.dataset.category === 'all');
+    });
+    
+    updateQuestion('next');
+    showToast('Surprise! 🎉');
+}
+
 // Get filtered questions based on category
 function getFilteredQuestions() {
     if (currentCategory === 'all') {
         return [...questions];
     }
     return questions.filter(q => q.category === currentCategory);
-}
-
-// Get unique ID for a question
-function getQuestionId(question) {
-    return `${question.category}-${question.text.substring(0, 30)}`;
 }
 
 // Load done questions from localStorage
@@ -219,12 +293,39 @@ function saveDoneQuestions() {
     }
 }
 
+// Load favorite questions from localStorage
+function loadFavoriteQuestions() {
+    try {
+        const saved = localStorage.getItem('checkin-favorite-questions');
+        return saved ? JSON.parse(saved) : {};
+    } catch (e) {
+        return {};
+    }
+}
+
+// Save favorite questions to localStorage
+function saveFavoriteQuestions() {
+    try {
+        localStorage.setItem('checkin-favorite-questions', JSON.stringify(favoriteQuestions));
+    } catch (e) {
+        // Ignore storage errors
+    }
+}
+
 // Check if current question is done
 function isCurrentQuestionDone() {
     if (filteredQuestions.length === 0) return false;
     const question = filteredQuestions[currentIndex];
     const id = getQuestionId(question);
     return doneQuestions[id] === true;
+}
+
+// Check if current question is favorited
+function isCurrentQuestionFavorited() {
+    if (filteredQuestions.length === 0) return false;
+    const question = filteredQuestions[currentIndex];
+    const id = getQuestionId(question);
+    return favoriteQuestions[id] === true;
 }
 
 // Toggle done state for current question
@@ -239,6 +340,11 @@ function toggleDone() {
         delete doneQuestions[id];
     } else {
         doneQuestions[id] = true;
+        
+        // Check if all done for confetti
+        if (totalDone() === questions.length) {
+            triggerConfetti();
+        }
     }
     
     saveDoneQuestions();
@@ -254,6 +360,31 @@ function toggleDone() {
     }
 }
 
+// Toggle favorite state for current question
+function toggleFavorite() {
+    if (filteredQuestions.length === 0) return;
+    
+    const question = filteredQuestions[currentIndex];
+    const id = getQuestionId(question);
+    const isFavorited = favoriteQuestions[id];
+    
+    if (isFavorited) {
+        delete favoriteQuestions[id];
+    } else {
+        favoriteQuestions[id] = true;
+    }
+    
+    saveFavoriteQuestions();
+    updateFavoriteButtonState();
+    
+    // Show feedback
+    if (!isFavorited) {
+        showToast('Added to favorites! ⭐');
+    } else {
+        showToast('Removed from favorites');
+    }
+}
+
 // Update done button visual state
 function updateDoneButtonState() {
     const isDone = isCurrentQuestionDone();
@@ -263,6 +394,19 @@ function updateDoneButtonState() {
     } else {
         doneBtn.classList.remove('is-done');
         doneBtnText.textContent = 'Mark done';
+    }
+}
+
+// Update favorite button visual state
+function updateFavoriteButtonState() {
+    if (!favoriteBtn) return;
+    const isFavorited = isCurrentQuestionFavorited();
+    if (isFavorited) {
+        favoriteBtn.classList.add('is-favorite');
+        favoriteBtnText.textContent = 'Favorited';
+    } else {
+        favoriteBtn.classList.remove('is-favorite');
+        favoriteBtnText.textContent = 'Favorite';
     }
 }
 
@@ -279,7 +423,12 @@ function updateCardDoneState() {
 // Update progress indicator
 function updateProgressIndicator() {
     const total = Object.keys(doneQuestions).length;
-    progressCount.textContent = `${total} done`;
+    const favorites = Object.keys(favoriteQuestions).length;
+    let text = `${total} done`;
+    if (favorites > 0) {
+        text += ` · ${favorites} ⭐`;
+    }
+    progressCount.textContent = text;
 }
 
 // Reset all progress
@@ -297,6 +446,45 @@ function resetProgress() {
         updateProgressIndicator();
         showToast('Progress reset!');
     }
+}
+
+// Export done questions as markdown
+function exportProgress() {
+    const doneIds = Object.keys(doneQuestions);
+    if (doneIds.length === 0) {
+        showToast('No questions done yet!');
+        return;
+    }
+    
+    let markdown = '# Check-in Questions Used\n\n';
+    markdown += `Exported on ${new Date().toLocaleDateString()}\n\n`;
+    
+    // Group by category
+    const byCategory = {};
+    doneIds.forEach(id => {
+        const question = questions.find(q => getQuestionId(q) === id);
+        if (question) {
+            if (!byCategory[question.category]) {
+                byCategory[question.category] = [];
+            }
+            byCategory[question.category].push(question.text);
+        }
+    });
+    
+    Object.entries(byCategory).forEach(([category, items]) => {
+        markdown += `## ${category.charAt(0).toUpperCase() + category.slice(1)}\n\n`;
+        items.forEach(text => {
+            markdown += `- ${text}\n`;
+        });
+        markdown += '\n';
+    });
+    
+    // Copy to clipboard
+    navigator.clipboard.writeText(markdown).then(() => {
+        showToast('Exported to clipboard! 📋');
+    }).catch(() => {
+        showToast('Failed to export');
+    });
 }
 
 // Get total done count
@@ -326,6 +514,10 @@ function updateQuestion(direction = null) {
     // Update done state
     updateDoneButtonState();
     updateCardDoneState();
+    updateFavoriteButtonState();
+    
+    // Update URL for sharing
+    updateURL();
 }
 
 // Navigate to next question
@@ -418,6 +610,88 @@ function filterByCategory(category) {
     updateQuestion();
 }
 
+// Confetti animation when all questions done
+function triggerConfetti() {
+    const colors = ['#ff8fa3', '#d4b5f0', '#a8e6cf', '#ffd3b6', '#a8d8ea'];
+    const confettiCount = 100;
+    
+    for (let i = 0; i < confettiCount; i++) {
+        const confetti = document.createElement('div');
+        confetti.style.position = 'fixed';
+        confetti.style.width = '10px';
+        confetti.style.height = '10px';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.top = '-10px';
+        confetti.style.borderRadius = '50%';
+        confetti.style.zIndex = '9999';
+        confetti.style.pointerEvents = 'none';
+        document.body.appendChild(confetti);
+        
+        const duration = Math.random() * 3 + 2;
+        const delay = Math.random() * 2;
+        
+        confetti.animate([
+            { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+            { transform: `translateY(${window.innerHeight}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+        ], {
+            duration: duration * 1000,
+            delay: delay * 1000,
+            easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+        }).onfinish = () => confetti.remove();
+    }
+    
+    showToast('🎉 All questions completed! Amazing! 🎉');
+}
+
+// Keyboard shortcuts modal
+function showHelpModal() {
+    const modal = document.createElement('div');
+    modal.className = 'help-modal';
+    modal.innerHTML = `
+        <div class="help-modal-content">
+            <button class="help-modal-close" aria-label="Close help">&times;</button>
+            <h3>Keyboard Shortcuts</h3>
+            <div class="help-shortcuts">
+                <div class="help-shortcut"><kbd>←</kbd> <span>Previous question</span></div>
+                <div class="help-shortcut"><kbd>→</kbd> <span>Next question</span></div>
+                <div class="help-shortcut"><kbd>C</kbd> <span>Copy question</span></div>
+                <div class="help-shortcut"><kbd>D</kbd> <span>Mark as done</span></div>
+                <div class="help-shortcut"><kbd>F</kbd> <span>Add to favorites</span></div>
+                <div class="help-shortcut"><kbd>?</kbd> <span>Show this help</span></div>
+                <div class="help-shortcut"><kbd>S</kbd> <span>Surprise me!</span></div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Close on click outside or X
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal || e.target.classList.contains('help-modal-close')) {
+            modal.remove();
+        }
+    });
+    
+    // Close on Escape
+    modal.closeHandler = (e) => {
+        if (e.key === 'Escape') {
+            modal.remove();
+            document.removeEventListener('keydown', modal.closeHandler);
+        }
+    };
+    document.addEventListener('keydown', modal.closeHandler);
+}
+
+// Register service worker for PWA
+function registerServiceWorker() {
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(err => {
+            console.log('Service worker registration failed:', err);
+        });
+    }
+}
+
 // Setup event listeners
 function setupEventListeners() {
     // Navigation buttons
@@ -430,8 +704,23 @@ function setupEventListeners() {
     // Done button
     doneBtn.addEventListener('click', toggleDone);
     
+    // Favorite button
+    if (favoriteBtn) {
+        favoriteBtn.addEventListener('click', toggleFavorite);
+    }
+    
     // Reset button
     resetBtn.addEventListener('click', resetProgress);
+    
+    // Export button
+    if (exportBtn) {
+        exportBtn.addEventListener('click', exportProgress);
+    }
+    
+    // Surprise button
+    if (surpriseBtn) {
+        surpriseBtn.addEventListener('click', surpriseMe);
+    }
     
     // Category pills
     categoryPills.forEach(pill => {
@@ -442,6 +731,9 @@ function setupEventListeners() {
     
     // Keyboard navigation
     document.addEventListener('keydown', (e) => {
+        // Don't trigger shortcuts if user is typing in an input
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        
         if (e.key === 'ArrowLeft') {
             prevQuestion();
         } else if (e.key === 'ArrowRight') {
@@ -453,6 +745,12 @@ function setupEventListeners() {
             copyToClipboard();
         } else if (e.key.toLowerCase() === 'd') {
             toggleDone();
+        } else if (e.key.toLowerCase() === 'f') {
+            toggleFavorite();
+        } else if (e.key === '?') {
+            showHelpModal();
+        } else if (e.key.toLowerCase() === 's') {
+            surpriseMe();
         }
     });
     
