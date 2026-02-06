@@ -564,7 +564,7 @@ function nextQuestion() {
     isAnimating = true;
     
     // Slide left (current moves left, next comes in from right)
-    carouselTrack.style.transform = 'translateX(-33.333%)';
+    carouselTrack.style.transform = 'translateX(-100%)';
     
     setTimeout(() => {
         currentIndex = (currentIndex + 1) % filteredQuestions.length;
@@ -590,7 +590,7 @@ function prevQuestion() {
     isAnimating = true;
     
     // Slide right (current moves right, prev comes in from left)
-    carouselTrack.style.transform = 'translateX(33.333%)';
+    carouselTrack.style.transform = 'translateX(100%)';
     
     setTimeout(() => {
         currentIndex = (currentIndex - 1 + filteredQuestions.length) % filteredQuestions.length;
