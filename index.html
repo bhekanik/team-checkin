@@ -104,59 +104,59 @@
             </p>
         </section>
 
-        <section class="question-card" aria-label="Question card">
-            <div class="card-inner" id="cardInner">
-                <div class="card-status" id="cardStatus" aria-hidden="true"></div>
-                <div class="category-badge" id="categoryBadge">Icebreaker</div>
-                <h2 class="question" id="questionText">What's one thing you're looking forward to this week?</h2>
-                <div class="card-actions">
-                    <button class="btn-copy" id="copyBtn" title="Copy to clipboard" aria-label="Copy question to clipboard">
-                        <span class="btn-content">
-                            <svg class="icon-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                            </svg>
-                            <svg class="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-                                <path d="M20 6L9 17l-5-5"/>
-                            </svg>
-                            <span class="btn-text">Copy</span>
-                        </span>
-                        <span class="btn-ripple" aria-hidden="true"></span>
-                    </button>
-                    <button class="btn-done" id="doneBtn" title="Mark as done" aria-label="Mark question as done">
-                        <span class="btn-content">
-                            <svg class="icon-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                                <circle cx="12" cy="12" r="10"/>
-                            </svg>
-                            <svg class="icon-check-filled" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true">
-                                <circle cx="12" cy="12" r="10"/>
-                                <path d="M9 12l2 2 4-4" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            <span class="btn-text">Done</span>
-                        </span>
-                        <span class="btn-ripple" aria-hidden="true"></span>
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <section class="controls" aria-label="Navigation controls">
-            <button class="nav-btn prev" id="prevBtn" aria-label="Previous question">
+        <div class="card-with-nav" aria-label="Question card with navigation">
+            <button class="nav-btn nav-btn--side prev" id="prevBtn" aria-label="Previous question">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
                     <path d="M19 12H5M12 19l-7-7 7-7"/>
                 </svg>
             </button>
             
-            <div class="instructions">
-                <span>Use arrow keys to navigate</span>
-            </div>
+            <section class="question-card">
+                <div class="card-inner" id="cardInner">
+                    <div class="card-status" id="cardStatus" aria-hidden="true"></div>
+                    <div class="category-badge" id="categoryBadge">Icebreaker</div>
+                    <h2 class="question" id="questionText">What's one thing you're looking forward to this week?</h2>
+                    <div class="card-actions">
+                        <button class="btn-copy" id="copyBtn" title="Copy to clipboard" aria-label="Copy question to clipboard">
+                            <span class="btn-content">
+                                <svg class="icon-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                </svg>
+                                <svg class="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                                    <path d="M20 6L9 17l-5-5"/>
+                                </svg>
+                                <span class="btn-text">Copy</span>
+                            </span>
+                            <span class="btn-ripple" aria-hidden="true"></span>
+                        </button>
+                        <button class="btn-done" id="doneBtn" title="Mark as done" aria-label="Mark question as done">
+                            <span class="btn-content">
+                                <svg class="icon-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                    <circle cx="12" cy="12" r="10"/>
+                                </svg>
+                                <svg class="icon-check-filled" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <path d="M9 12l2 2 4-4" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <span class="btn-text">Done</span>
+                            </span>
+                            <span class="btn-ripple" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
+            </section>
             
-            <button class="nav-btn next" id="nextBtn" aria-label="Next question">
+            <button class="nav-btn nav-btn--side next" id="nextBtn" aria-label="Next question">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
                     <path d="M5 12h14M12 5l7 7-7 7"/>
                 </svg>
             </button>
-        </section>
+        </div>
+
+        <div class="instructions" aria-label="Navigation instructions">
+            <span>Use arrow keys to navigate</span>
+        </div>
 
         <nav class="categories" aria-label="Question categories">
             <button class="category-pill active" data-category="all">All</button>
