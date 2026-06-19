@@ -19,6 +19,10 @@
   - 🧘 Reflection
 
 - **Mark as Done** - Track which questions you've already used
+- **Favorites** - Star questions you love and keep them handy
+- **Surprise Me** - Jump to a random question from any category
+- **Export to Clipboard** - Copy your used questions as markdown
+- **Offline / PWA Support** - Service worker and manifest let it work offline and install as an app
 - **Progress Persistence** - Your done state is saved in localStorage
 - **Copy to Clipboard** - One-click copying of questions
 - **Keyboard Navigation** - Use arrow keys to navigate
@@ -72,6 +76,9 @@ Or simply open `index.html` in your browser.
 | `→` | Next question |
 | `C` | Copy current question |
 | `D` | Mark as done/undo |
+| `F` | Add/remove favorite |
+| `S` | Surprise me (random question) |
+| `?` | Show keyboard shortcuts |
 
 ## 📁 Project Structure
 
@@ -80,6 +87,9 @@ team-checkin/
 ├── index.html      # Main HTML file
 ├── styles.css      # All styles
 ├── script.js       # Application logic
+├── sw.js           # Service worker (PWA offline support)
+├── manifest.json   # PWA manifest
+├── deploy.sh       # Deploy script (git + Surge)
 ├── package.json    # Node metadata
 └── README.md       # This file
 ```
