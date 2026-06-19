@@ -900,6 +900,33 @@ body {
     }
 }
 
+/* Short viewports (landscape phones, short windows) - prevent card clipping.
+   The middle region is pinned between fixed top/bottom bars and clips overflow.
+   On short heights a long question + action buttons exceed that space and get
+   cut off with no way to reach them. Scroll instead of clip, and shrink the
+   question's reserved space so content fits. Guarded by max-height so taller
+   layouts (desktop/tablet) are visually unchanged. */
+@media (max-height: 600px) {
+    .middle-content {
+        overflow-y: auto;
+        align-items: flex-start;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .question {
+        min-height: 0;
+        margin-bottom: 1rem;
+    }
+
+    .card-inner {
+        padding: 1.25rem;
+    }
+
+    .category-badge {
+        margin-bottom: 0.75rem;
+    }
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
