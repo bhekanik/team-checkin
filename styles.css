@@ -388,10 +388,6 @@ body {
     display: block;
 }
 
-.btn-done.is-done .btn-text::after {
-    content: 'd';
-}
-
 /* Surprise button */
 .btn-surprise {
     display: inline-flex;
