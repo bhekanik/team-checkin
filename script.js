@@ -171,8 +171,37 @@ const surpriseBtn = document.getElementById('surpriseBtn');
 const categoryPills = document.querySelectorAll('.category-pill');
 const toast = document.getElementById('toast');
 
+// Migrate saved progress from the legacy id scheme to the new id scheme.
+// Idempotent: only copies when the new id is absent but the legacy id is
+// present. Runs on every load. Because legacy ids can collide, one legacy id
+// may map to two questions; we copy to both new ids (best-effort).
+function migrateQuestionIds() {
+    let doneChanged = false;
+    let favChanged = false;
+
+    for (const question of questions) {
+        const oldId = getLegacyQuestionId(question);
+        const newId = getQuestionId(question);
+
+        if (doneQuestions[oldId] !== undefined && doneQuestions[newId] === undefined) {
+            doneQuestions[newId] = doneQuestions[oldId];
+            doneChanged = true;
+        }
+        if (favoriteQuestions[oldId] !== undefined && favoriteQuestions[newId] === undefined) {
+            favoriteQuestions[newId] = favoriteQuestions[oldId];
+            favChanged = true;
+        }
+    }
+
+    if (doneChanged) saveDoneQuestions();
+    if (favChanged) saveFavoriteQuestions();
+}
+
 // Initialize
 function init() {
+    // Migrate any legacy-scheme saved progress before reading it anywhere
+    migrateQuestionIds();
+
     // Check URL for shared question
     loadFromURL();
     
@@ -189,8 +218,28 @@ function init() {
     registerServiceWorker();
 }
 
-// Get unique ID for a question
+// Deterministic, non-cryptographic FNV-1a hash of a string, rendered base36.
+// Order-independent, compact, URL-safe. Used to derive stable question ids.
+function fnv1aHash(str) {
+    let hash = 0x811c9dc5; // FNV offset basis (32-bit)
+    for (let i = 0; i < str.length; i++) {
+        hash ^= str.charCodeAt(i);
+        // FNV prime 16777619, kept in 32-bit unsigned range via Math.imul + >>> 0
+        hash = Math.imul(hash, 0x01000193) >>> 0;
+    }
+    return (hash >>> 0).toString(36);
+}
+
+// Get unique, stable, URL-safe ID for a question.
+// Derived from the FULL text (not a 30-char prefix) so ids never collide
+// and don't depend on array order.
 function getQuestionId(question) {
+    return `${question.category}-${fnv1aHash(question.text)}`;
+}
+
+// Legacy id scheme (30-char text prefix). Kept only for migrating saved
+// progress and resolving old share links. Can collide -> best-effort only.
+function getLegacyQuestionId(question) {
     return `${question.category}-${question.text.substring(0, 30)}`;
 }
 
@@ -222,18 +271,22 @@ function loadFromURL() {
     filteredQuestions = getFilteredQuestions();
     
     if (questionId) {
+        // Match by new id; fall back to the legacy id scheme so old share
+        // links still resolve. findIndex returns the first match either way.
+        const matches = q => getQuestionId(q) === questionId || getLegacyQuestionId(q) === questionId;
+
         // Find question by ID
-        const index = filteredQuestions.findIndex(q => getQuestionId(q) === questionId);
+        const index = filteredQuestions.findIndex(matches);
         if (index !== -1) {
             currentIndex = index;
         } else {
             // Question not found in current filter, try all questions
-            const allIndex = questions.findIndex(q => getQuestionId(q) === questionId);
+            const allIndex = questions.findIndex(matches);
             if (allIndex !== -1) {
                 // Switch to that question's category
                 currentCategory = questions[allIndex].category;
                 filteredQuestions = getFilteredQuestions();
-                currentIndex = filteredQuestions.findIndex(q => getQuestionId(q) === questionId);
+                currentIndex = filteredQuestions.findIndex(matches);
                 // Update active pill
                 categoryPills.forEach(pill => {
                     pill.classList.toggle('active', pill.dataset.category === currentCategory);
