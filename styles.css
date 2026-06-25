@@ -231,6 +231,7 @@ body {
 .category-badge.personal { background: rgba(255, 211, 182, 0.35); border-color: rgba(255, 211, 182, 0.5); color: #c9916e; }
 .category-badge.work { background: rgba(168, 216, 234, 0.35); border-color: rgba(168, 216, 234, 0.5); color: #5a8fa3; }
 .category-badge.fun { background: rgba(253, 255, 182, 0.4); border-color: rgba(253, 255, 182, 0.6); color: #9a9b5c; }
+.category-badge.hypothetical { background: rgba(178, 190, 245, 0.3); border-color: rgba(178, 190, 245, 0.5); color: #6b73b0; }
 .category-badge.reflection { background: rgba(212, 181, 240, 0.2); border-color: rgba(212, 181, 240, 0.35); color: #8b74a3; }
 
 .question {
